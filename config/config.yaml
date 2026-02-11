@@ -1,0 +1,90 @@
+# CryptoGuardLite Configuration File
+
+# Data Configuration
+data:
+  raw_data_dir: "data/raw"
+  processed_data_dir: "data/processed"
+  model_dir: "data/models"
+  datasets:
+    - name: "CIC-IDS2017"
+      path: "data/raw/CIC-IDS2017"
+    - name: "UNSW-NB15"
+      path: "data/raw/UNSW-NB15"
+    - name: "ISCX-VPN"
+      path: "data/raw/ISCX-VPN"
+
+# Feature Extraction Configuration
+feature_extraction:
+  max_packet_length: 1500
+  sequence_length: 100
+  features:
+    - packet_length
+    - inter_arrival_time
+    - protocol_type
+    - payload_bytes
+    - tcp_flags
+    - packet_direction
+
+# Model Configuration
+model:
+  baseline:
+    type: "CNN"
+    input_dim: 100
+    output_dim: 10
+    epochs: 50
+    batch_size: 32
+    learning_rate: 0.001
+  
+  hybrid:
+    type: "CNN-BiLSTM-Transformer"
+    cnn_filters: [64, 128, 256]
+    lstm_hidden_size: 128
+    transformer_heads: 8
+    transformer_layers: 4
+    dropout: 0.3
+    epochs: 100
+    batch_size: 64
+    learning_rate: 0.0001
+
+# Training Configuration
+training:
+  device: "cuda"  # or "cpu"
+  use_mixed_precision: true
+  gradient_accumulation_steps: 1
+  early_stopping_patience: 10
+  save_best_model: true
+  log_interval: 100
+
+# API Configuration
+api:
+  host: "0.0.0.0"
+  port: 8000
+  debug: false
+  workers: 4
+  cors_origins:
+    - "http://localhost:3000"
+    - "http://localhost:5173"
+
+# Database Configuration
+database:
+  type: "sqlite"
+  path: "data/cryptoguard.db"
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  log_dir: "logs"
+  log_file: "cryptoguard.log"
+
+# Attack Types
+attack_types:
+  - "Normal"
+  - "DDoS"
+  - "C2"
+  - "Mining"
+  - "Port Scan"
+  - "Brute Force"
+  - "SQL Injection"
+  - "XSS"
+  - "Malware"
+  - "Exfiltration"

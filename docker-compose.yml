@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  cryptoguard-api:
+    build: .
+    container_name: cryptoguard-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config
+    environment:
+      - PYTHONPATH=/app/src
+      - CUDA_VISIBLE_DEVICES=0
+    command: python main.py api
+    restart: unless-stopped
+
+  cryptoguard-train:
+    build: .
+    container_name: cryptoguard-train
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config
+    environment:
+      - PYTHONPATH=/app/src
+      - CUDA_VISIBLE_DEVICES=0
+    command: python scripts/train.py --model hybrid --epochs 50
+    profiles:
+      - train
